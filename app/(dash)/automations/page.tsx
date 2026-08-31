@@ -21,7 +21,7 @@ export default async function AutomationsPage() {
       dmLink: automation.dmLink,
       triggered: sql<number>`(
         select count(*)::int from ${commentEvent}
-        where ${commentEvent.automationId} = ${automation.id}
+        where "comment_event"."automation_id" = "automation"."id"
       )`,
     })
     .from(automation)
