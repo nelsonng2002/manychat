@@ -77,6 +77,20 @@ export function AutomationForm({ action, defaults, posts, submitLabel }: Props) 
       {defaults.id ? <input type="hidden" name="id" value={defaults.id} /> : null}
 
       <div className="space-y-4">
+        <div className="rounded-xl border border-line bg-surface p-5">
+          <label htmlFor="automation-name" className="text-sm font-semibold">
+            Name
+          </label>
+          <p className="mt-0.5 text-xs text-muted">Only shown to you, in the list.</p>
+          <input
+            id="automation-name"
+            name="name"
+            defaultValue={defaults.name}
+            placeholder="Link-in-bio guide"
+            className="field mt-3"
+          />
+        </div>
+
         <Step n={1} title="Which posts?">
           <div className="space-y-2">
             {[
