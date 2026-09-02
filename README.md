@@ -36,8 +36,8 @@ This is the full path from a fresh clone to a working automation. Budget about
 an hour; most of it is the Meta dashboard, not the code.
 
 You will need: an Instagram account you control, a Meta (Facebook) account, a
-[Neon](https://neon.tech) account, a [Vercel](https://vercel.com) account, and
-Node 20+ with `pnpm`.
+[Vercel](https://vercel.com) account (the database is provisioned through it,
+via Neon), and Node 20+ with `pnpm`.
 
 The order matters. Meta needs a live HTTPS URL before it will accept your
 webhook, so the app gets deployed **before** the Meta config is finished.
@@ -69,12 +69,18 @@ GitHub repo now — the workflow only runs from a repo you control.
 
 ## Step 3 — Create the database
 
-1. Sign in at [neon.tech](https://neon.tech) and create a project.
-2. From the project dashboard, copy the **connection string** — the pooled one,
-   which looks like:
+Create the Neon database **through Vercel**, not on neon.tech directly — this
+links it to your project automatically and saves a step later in Step 7.
+
+1. Sign in at [vercel.com](https://vercel.com).
+2. **Storage → Create Database → Neon** (Postgres, powered by Neon).
+3. Name it and create it. Vercel provisions the Neon project for you.
+4. Copy the connection string it gives you — the pooled one, which looks like:
    `postgresql://user:pass@ep-xxx-pooler.region.aws.neon.tech/neondb?sslmode=require`
 
-Keep it handy for Step 5.
+Keep it handy for Step 5. If you connect the database to your Vercel project
+now, Vercel will also offer to inject `DATABASE_URL` into your project's
+environment variables automatically, which saves you re-entering it in Step 7.
 
 ---
 
@@ -88,29 +94,29 @@ Facebook account that will own the app.
 
 1. **My Apps → Create App**.
 2. **App name**: anything (e.g. `comment-to-dm`). **Contact email**: yours.
-3. When asked *"What do you want your app to do?"*, choose the use case for
-   Instagram — depending on the dashboard version this is labelled
-   **Other → Business**, or an **Instagram** use case tile. Either works; you
-   add the Instagram product in the next step regardless.
+3. On the use-case picker, click the **All** tab and choose **Manage
+   messaging and content on Instagram**. This is the use case this app is
+   built around — don't use a generic "Business" or "Other" tile if you see
+   one instead.
 4. Create the app. You land on the app dashboard.
 
-### 4b. Add the Instagram product and set up Instagram Login
+### 4b. Set up Instagram Login inside the use case
 
-1. In the left sidebar, find **Instagram** (under *Products*, or listed as a use
-   case). If it is not there yet, **Add product → Instagram → Set up**.
-2. Inside Instagram, open **API setup with Instagram login** (sometimes shown as
-   *Instagram Login*). This is the flow this app uses — **not** Facebook Login,
-   and **not** the older "API setup with Facebook login". Choosing the Facebook
-   variant produces tokens this app cannot use.
+1. In the left sidebar, open **Use cases**, then click **Customize** on the
+   *Manage messaging and content on Instagram* use case you just added.
+2. Inside it, open **API setup with Instagram login**. This is the flow this
+   app uses — **not** Facebook Login, and **not** the older "API setup with
+   Facebook login". Choosing the Facebook variant produces tokens this app
+   cannot use.
 
 ### 4c. Get your App ID and App Secret
 
 > The **Instagram** app ID/secret are what you need — not the ones on
 > *App settings → Basic*.
 
-Go to the **Instagram** product → **API setup with Instagram login**. In the
-step titled **"1. Generate access tokens"** (or the *Business login settings*
-panel next to it) you will find:
+Same screen as above: **Use cases → Customize use case → API setup with
+Instagram login**. In the step titled **"1. Generate access tokens"** (or the
+*Business login settings* panel next to it) you will find:
 
 - **Instagram app ID**
 - **Instagram app secret** — click **Show**, re-enter your Facebook password,
